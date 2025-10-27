@@ -1,0 +1,48 @@
+name: Run BizBuySell Scraper
+
+on:
+  workflow_dispatch:        # allows you to manually trigger the scraper
+  schedule:
+    - cron: "0 12 */3 * *"  # runs every 3 days at 12:00 UTC (7 AM Arizona time)
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Call OpenAI Workflow
+        run: |
+          echo "Running BizBuySell scraper workflow..."
+          curl -s -X POST "https://api.openai.com/v1/workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs?version=2" \
+            -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "input": {
+                "state_url": "https://www.bizbuysell.com/texas-businesses-for-sale/?q=bHQ9MzAsNDAsODAmcGZyb209MjUwMDAwMCZwdG89NTAwMDAwMDA%3D"
+              }
+            }' \
+            -o listings.json
+
+      - name: Display output
+        run: |
+          echo "Scraper completed. Output JSON:"
+          cat listings.json
+
+      - name: Commit and push updated listings
+        run: |
+          mkdir -p data
+          mv listings.json data/texas.json
+
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/texas.json
+
+          if git diff --cached --quiet; then
+            echo "No changes in listings.json, skipping commit."
+          else
+            git commit -m "Auto-update Texas BizBuySell listings [$(date -u +"%Y-%m-%d %H:%M:%S")]"
+            git push
+          fi
