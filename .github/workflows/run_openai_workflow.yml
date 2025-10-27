@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Call OpenAI Workflow
+      - name: Call OpenAI Agent Workflow
         run: |
           echo "Running BizBuySell scraper workflow..."
-          curl -s -X POST "https://api.openai.com/v1/workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs" \
+          curl -s -X POST "https://api.openai.com/v1/agent-workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
