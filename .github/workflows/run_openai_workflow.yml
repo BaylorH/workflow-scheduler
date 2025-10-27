@@ -1,9 +1,9 @@
 name: Run BizBuySell Scraper
 
 on:
-  workflow_dispatch:        # allows you to manually trigger the scraper
+  workflow_dispatch:
   schedule:
-    - cron: "0 12 */3 * *"  # runs every 3 days at 12:00 UTC (7 AM Arizona time)
+    - cron: "0 12 */3 * *"  # every 3 days at 12:00 UTC
 
 jobs:
   run-scraper:
@@ -16,10 +16,11 @@ jobs:
       - name: Call OpenAI Workflow
         run: |
           echo "Running BizBuySell scraper workflow..."
-          curl -s -X POST "https://api.openai.com/v1/workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs?version=2" \
+          curl -s -X POST "https://api.openai.com/v1/workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
+              "version": "2",
               "input": {
                 "state_url": "https://www.bizbuysell.com/texas-businesses-for-sale/?q=bHQ9MzAsNDAsODAmcGZyb209MjUwMDAwMCZwdG89NTAwMDAwMDA%3D"
               }
@@ -41,7 +42,7 @@ jobs:
           git add data/texas.json
 
           if git diff --cached --quiet; then
-            echo "No changes in listings.json, skipping commit."
+            echo "No changes to commit."
           else
             git commit -m "Auto-update Texas BizBuySell listings [$(date -u +"%Y-%m-%d %H:%M:%S")]"
             git push
