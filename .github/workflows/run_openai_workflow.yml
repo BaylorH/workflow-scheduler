@@ -1,9 +1,9 @@
 name: Run BizBuySell Scraper
 
 on:
-  workflow_dispatch:        # allows you to manually trigger the scraper
+  workflow_dispatch:
   schedule:
-    - cron: "0 12 */3 * *"  # runs every 3 days at 12:00 UTC (7 AM AZ time)
+    - cron: "0 12 */3 * *"  # every 3 days at 12:00 UTC (7 AM Arizona time)
 
 jobs:
   run-scraper:
@@ -16,7 +16,7 @@ jobs:
       - name: Call OpenAI Workflow
         run: |
           echo "Running BizBuySell scraper workflow..."
-          curl -s -X POST "https://api.openai.com/v1/workflows/runs" \
+          curl -s -X POST "https://api.openai.com/v1/agent-workflows/runs" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
