@@ -3,7 +3,7 @@ name: Run BizBuySell Scraper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 12 */3 * *"  # every 3 days at 12:00 UTC (7 AM AZ time)
+    - cron: "0 12 */3 * *"  # every 3 days at 12:00 UTC (7 AM Arizona)
 
 jobs:
   run-scraper:
@@ -16,12 +16,10 @@ jobs:
       - name: Call OpenAI Workflow
         run: |
           echo "Running BizBuySell scraper workflow..."
-          curl -s -X POST "https://api.openai.com/v1/workflow_runs" \
+          curl -s -X POST "https://api.openai.com/v1/workflows/wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090/runs" \
             -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d '{
-              "workflow_id": "wf_68fecea65dfc8190b24813a1eaecb735024a65cfa9aa1090",
-              "version": "2",
               "input": {
                 "state_url": "https://www.bizbuysell.com/texas-businesses-for-sale/?q=bHQ9MzAsNDAsODAmcGZyb209MjUwMDAwMCZwdG89NTAwMDAwMDA%3D"
               }
