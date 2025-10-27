@@ -1,8 +1,7 @@
-{
-  "error": {
-    "message": "Invalid URL (POST /v1/workflows/runs)",
-    "type": "invalid_request_error",
-    "param": null,
-    "code": null
-  }
-}
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
